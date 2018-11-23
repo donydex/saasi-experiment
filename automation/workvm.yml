@@ -1,0 +1,25 @@
+---
+- name: Pull latest code, and run microservices
+  hosts: workvm
+  remote_user: root
+
+  tasks:
+  - name: restart docker
+    service:
+      name: docker
+      state: restarted
+  - name: create dir
+    file: path=/app state=directory
+  - name: checkout code
+    git:
+      repo: 'https://github.com/ztl8702/saasi-experiment.git'
+      dest: /app
+      version: master #deploy
+      force: true
+      accept_hostkey: true
+  - name: add executable permissions
+    shell: chmod +x /app/workvm/Application3/run.sh && chmod -R o+r /app && chmod -R o+x /app && chmod -R o+w /app
+  - name: build and run everything
+    shell: ./run.sh
+    args:
+      chdir: /app/workvm/Application3/

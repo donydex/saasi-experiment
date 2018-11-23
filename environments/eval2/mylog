@@ -1,0 +1,43 @@
+
+echo $1
++ echo 2m
+2m
+echo $2
++ echo /home/webdep/data
+/home/webdep/data
+STYX=~/go/bin/styx
++ STYX=/home/webdep/go/bin/styx
+TIME_SPAN=$1
++ TIME_SPAN=2m
+OUTPUT_DIR=$2
++ OUTPUT_DIR=/home/webdep/data
+
+$STYX -d $TIME_SPAN 'bms_business_violation_total' > $OUTPUT_DIR/bms_business_violation_total.csv
++ /home/webdep/go/bin/styx -d 2m bms_business_violation_total
+2018/11/17 19:20:24 Get http://localhost:9090/api/v1/query_range?end=1542453624&query=bms_business_violation_total&start=1542453504&step=1: dial tcp [::1]:9090: getsockopt: connection refused
+echo "Step1 finished"
++ echo 'Step1 finished'
+Step1 finished
+$STYX -d $TIME_SPAN 'docker_swarm_service_target_replicas{service_name=~"\\w+_business_web_1"}' > $OUTPUT_DIR/scale_business_web_1.csv
++ /home/webdep/go/bin/styx -d 2m 'docker_swarm_service_target_replicas{service_name=~"\\w+_business_web_1"}'
+2018/11/17 19:20:24 Get http://localhost:9090/api/v1/query_range?end=1542453624&query=docker_swarm_service_target_replicas%7Bservice_name%3D~%22%5C%5Cw%2B_business_web_1%22%7D&start=1542453504&step=1: dial tcp [::1]:9090: getsockopt: connection refused
+$STYX -d $TIME_SPAN 'docker_swarm_service_target_replicas{service_name=~"\\w+_business_web_2"}' > $OUTPUT_DIR/scale_business_web_1.csv
++ /home/webdep/go/bin/styx -d 2m 'docker_swarm_service_target_replicas{service_name=~"\\w+_business_web_2"}'
+2018/11/17 19:20:24 Get http://localhost:9090/api/v1/query_range?end=1542453624&query=docker_swarm_service_target_replicas%7Bservice_name%3D~%22%5C%5Cw%2B_business_web_2%22%7D&start=1542453504&step=1: dial tcp [::1]:9090: getsockopt: connection refused
+$STYX -d $TIME_SPAN 'docker_swarm_service_target_replicas{service_name=~"\\w+_business_web_3"}' > $OUTPUT_DIR/scale_business_web_1.csv
++ /home/webdep/go/bin/styx -d 2m 'docker_swarm_service_target_replicas{service_name=~"\\w+_business_web_3"}'
+2018/11/17 19:20:24 Get http://localhost:9090/api/v1/query_range?end=1542453624&query=docker_swarm_service_target_replicas%7Bservice_name%3D~%22%5C%5Cw%2B_business_web_3%22%7D&start=1542453504&step=1: dial tcp [::1]:9090: getsockopt: connection refused
+$STYX -d $TIME_SPAN 'avg(rate(container_cpu_usage_seconds_total[1m])) by (container_label_com_docker_swarm_service_name) * 100' > $OUTPUT_DIR/cpu_usage.csv
++ /home/webdep/go/bin/styx -d 2m 'avg(rate(container_cpu_usage_seconds_total[1m])) by (container_label_com_docker_swarm_service_name) * 100'
+2018/11/17 19:20:24 Get http://localhost:9090/api/v1/query_range?end=1542453624&query=avg%28rate%28container_cpu_usage_seconds_total%5B1m%5D%29%29+by+%28container_label_com_docker_swarm_service_name%29+%2A+100&start=1542453504&step=1: dial tcp [::1]:9090: getsockopt: connection refused
+$STYX -d $TIME_SPAN 'avg(container_memory_rss) by (container_label_com_docker_swarm_service_name)' > $OUTPUT_DIR/memory_usage.csv
++ /home/webdep/go/bin/styx -d 2m 'avg(container_memory_rss) by (container_label_com_docker_swarm_service_name)'
+2018/11/17 19:20:24 Get http://localhost:9090/api/v1/query_range?end=1542453624&query=avg%28container_memory_rss%29+by+%28container_label_com_docker_swarm_service_name%29&start=1542453504&step=1: dial tcp [::1]:9090: getsockopt: connection refused
+$STYX -d $TIME_SPAN 'avg(rate(container_fs_writes_bytes_total[1m])) by (container_label_com_docker_swarm_service_name)' > $OUTPUT_DIR/io_write_usage.csv
++ /home/webdep/go/bin/styx -d 2m 'avg(rate(container_fs_writes_bytes_total[1m])) by (container_label_com_docker_swarm_service_name)'
+2018/11/17 19:20:24 Get http://localhost:9090/api/v1/query_range?end=1542453624&query=avg%28rate%28container_fs_writes_bytes_total%5B1m%5D%29%29+by+%28container_label_com_docker_swarm_service_name%29&start=1542453504&step=1: dial tcp [::1]:9090: getsockopt: connection refused
+
+
+docker run --rm -ti --net=host taskrabbit/elasticsearch-dump --input=http://localhost:9200/fluentd-*  --output=$ --type=data | gzip > $OUTPUT_DIR/logs.json.gz
++ docker run --rm -ti --net=host taskrabbit/elasticsearch-dump '--input=http://localhost:9200/fluentd-*' '--output=$' --type=data
++ gzip

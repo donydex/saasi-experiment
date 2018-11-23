@@ -1,0 +1,30 @@
+---
+
+- name: Install docker-registry on VM1
+  hosts: registry
+  user: root
+  docker_registry_with_ssl: no
+  docker_registry_port: 5000
+  roles:
+    - docker-registry
+  tasks:
+    - name: Add `regserv` to hosts
+      lineinfile:
+        path: /etc/hosts
+        line: '172.17.0.9 regserv'
+
+- name: Configure clients
+  hosts: client
+  tasks:
+    - name: Add `regserv` to hosts
+      lineinfile:
+        path: /etc/hosts
+        line: '172.17.0.9 regserv'
+    - name: Trust VM1 on other VMs (Add daemon.json)
+      copy: src=daemon.json dest=/etc/docker/daemon.json
+    - name: Trust VM1 on other VMs (Restart docker engine)
+      service:
+        name: docker
+        state: restarted
+
+
