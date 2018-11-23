@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ## SmartVM Prototype Experiments
 
 This repository contains the code and configuration of the SmartVM prototype components and evaluation applications. 
@@ -81,7 +80,3 @@ Generate SSH key pair on `regserv` and upload the public key to all other VMs.
    It is recommended to restart the VMs after each experiment, to ensure consistent results.
    
    > During the experiments, you can visit `http://manager-01:3000` to view the monitoring dashboard, and `http://manager-01/` to see a visualisation of containers running on each VM.
-=======
-# saasi-sustc
-sustc微服务实验
->>>>>>> 160c1ceb48b511212a9f9268fe555621c67cd9fd
