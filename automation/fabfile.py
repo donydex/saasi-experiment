@@ -84,7 +84,7 @@ def start_load_eval1(userCount, requestsToRun):
         with cd('~/saasi-experiment/environments/eval1'):
         #from ipdb import set_trace;set_trace() 
             timesToRun=requestsToRun/5
-            run('locust --host=http://172.18.8.245:80/api --no-web -r 5 -c '+str(userCount)+' -t '+str(timesToRun))
+            run('locust --host=http://172.18.8.239:80/api --no-web -r 5 -c '+str(userCount)+' -t '+str(timesToRun))
 
 
 @roles('loadgen')
