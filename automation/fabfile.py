@@ -433,6 +433,8 @@ def run_eval3(users='10',reqs='20'):
     result = collect_data_eval3(minutesSpent)
 
     print(result)
+    # add for eval3
+    mkdir(outputPath)
     #with open(outputPath+'/data.json', 'w') as outfile:
     with open(outputPath+'/data.json', 'a') as outfile:
         json.dump(result, outfile, sort_keys=True, indent=4)
