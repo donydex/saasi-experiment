@@ -4,6 +4,13 @@ echo $2
 STYX=~/go/bin/styx
 TIME_SPAN=$1
 OUTPUT_DIR=$2
+EX="ex2"
+TIME=$(date "+%Y%m%d-%H%M%S")
+if [ ! -d $OUTPUT_DIR/$TIME-$EX ]; then
+  mkdir -p $OUTPUT_DIR/$TIME-$EX
+fi
+OUTPUT_DIR=$OUTPUT_DIR/$TIME-$EX
+echo $OUTPUT_DIR
 
 #$STYX -d $TIME_SPAN 'bms_business_violation_total' > $OUTPUT_DIR/bms_business_violation_total.gnuplot
 echo "Start scrach gnuplot from promethus"

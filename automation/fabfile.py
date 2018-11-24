@@ -82,7 +82,9 @@ elst = ElasticSearchClient()
 def start_load_eval1(userCount, requestsToRun):
     with settings(warn_only=True):
         with cd('~/saasi-experiment/environments/eval1'):
-            run('locust --host=http://172.18.8.245:8080/api --no-web -r 5 -c '+str(userCount)+' -n '+str(requestsToRun))
+        #from ipdb import set_trace;set_trace() 
+            timesToRun=requestsToRun/5
+            run('locust --host=http://172.18.8.245:80/api --no-web -r 5 -c '+str(userCount)+' -t '+str(timesToRun))
 
 
 @roles('loadgen')
@@ -98,7 +100,9 @@ def start_load_eval2(userCount, requestsToRun):
 def start_load_eval3(userCount, requestsToRun):
     with settings(warn_only=True):
         with cd('~/saasi-experiment/environments/eval3'):
-            run('locust --host=http://172.18.8.245:80/api --no-web -r 5 -c '+str(userCount)+' -n '+str(requestsToRun))
+        #from ipdb import set_trace;set_trace() 
+            timesToRun=requestsToRun/5
+            run('locust --host=http://172.18.8.245:80/api --no-web -r 5 -c '+str(userCount)+' -t '+str(timesToRun))
 
 
 @roles('loadgen')
