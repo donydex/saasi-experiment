@@ -243,7 +243,9 @@ def export_data_eval1(timespan, outputPath):
 @roles('manager')
 def export_data_eval2(timespan, outputPath):
     with cd('~/saasi-experiment/environments/eval2'):
-        run('./export_data.sh '+timespan+' ~/data')
+        run('./export_data_csv.sh '+timespan+' ~/data')
+        run('./export_data_gnuplot.sh '+timespan+' ~/data')
+        run('./export_data_matplotlib.sh '+timespan+' ~/data')
     get('~/data', outputPath)
 
 @roles('manager')
