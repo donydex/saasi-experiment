@@ -241,7 +241,9 @@ def ensure_business_microservice_healthy():
 @roles('manager')
 def export_data_eval1(timespan, outputPath):
     with cd('~/saasi-experiment/environments/eval1'):
-        run('./export_data.sh '+timespan+' ~/data')
+        run('./export_data_csv.sh '+timespan+' ~/data')
+        run('./export_data_gnuplot.sh '+timespan+' ~/data')
+        run('./export_data_matplotlib.sh '+timespan+' ~/data')
     get('~/data', outputPath)
 
 @roles('manager')
@@ -255,7 +257,9 @@ def export_data_eval2(timespan, outputPath):
 @roles('manager')
 def export_data_eval3(timespan, outputPath):
     with cd('~/saasi-experiment/environments/eval3'):
-        run('./export_data.sh '+timespan+' ~/data')
+        run('./export_data_csv.sh '+timespan+' ~/data')
+        run('./export_data_gnuplot.sh '+timespan+' ~/data')
+        run('./export_data_matplotlib.sh '+timespan+' ~/data')
     get('~/data', outputPath)
 
 def run_eval1(users='10',reqs='20'):
