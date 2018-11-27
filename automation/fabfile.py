@@ -312,7 +312,7 @@ def run_eval1(users='10',reqs='20'):
     print(result)
     mkdir(outputPath)
     with open(outputPath+'/data.json', 'w') as outfile:
-        json.dump(result, outfile, sort_keys=True, indent=4)
+        f.write(json.dump(result, outfile, sort_keys=True, indent=4))
 
     execute(export_data_eval1, str(minutesSpent)+'m', outputPath)
     
@@ -381,7 +381,7 @@ def run_eval2(users='10',reqs='20'):
     print(result)
     mkdir(outputPath)
     with open(outputPath+'/data.json', 'w') as outfile:
-        json.dump(result, outfile, sort_keys=True, indent=4)
+        f.write(json.dump(result, outfile, sort_keys=True, indent=4))
 
     execute(export_data_eval2, str(minutesSpent)+'m', outputPath)
     
@@ -439,7 +439,7 @@ def run_eval3(users='10',reqs='20'):
     mkdir(outputPath)
     #with open(outputPath+'/data.json', 'w') as outfile:
     with open(outputPath+'/data.json', 'a') as outfile:
-        json.dump(result, outfile, sort_keys=True, indent=4)
+        f.write(json.dump(result, outfile, sort_keys=True, indent=4))
 
     execute(export_data_eval3, str(minutesSpent)+'m', outputPath)
     execute(clean_stack)
