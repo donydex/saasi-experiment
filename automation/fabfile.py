@@ -242,24 +242,25 @@ def ensure_business_microservice_healthy():
 def export_data_eval1(timespan, outputPath):
     with cd('~/saasi-experiment/environments/eval1'):
         run('./export_data_csv.sh '+timespan+' ~/data')
-        run('./export_data_gnuplot.sh '+timespan+' ~/data')
-        run('./export_data_matplotlib.sh '+timespan+' ~/data')
+        # run('./export_data_gnuplot.sh '+timespan+' ~/data')
+        # run('./export_data_matplotlib.sh '+timespan+' ~/data')
     get('~/data', outputPath)
 
 @roles('manager')
 def export_data_eval2(timespan, outputPath):
     with cd('~/saasi-experiment/environments/eval2'):
+	from ipdb import set_trace;set_trace() 
         run('./export_data_csv.sh '+timespan+' ~/data')
-        run('./export_data_gnuplot.sh '+timespan+' ~/data')
-        run('./export_data_matplotlib.sh '+timespan+' ~/data')
+        # run('./export_data_gnuplot.sh '+timespan+' ~/data')
+        # run('./export_data_matplotlib.sh '+timespan+' ~/data')
     get('~/data', outputPath)
 
 @roles('manager')
 def export_data_eval3(timespan, outputPath):
     with cd('~/saasi-experiment/environments/eval3'):
         run('./export_data_csv.sh '+timespan+' ~/data')
-        run('./export_data_gnuplot.sh '+timespan+' ~/data')
-        run('./export_data_matplotlib.sh '+timespan+' ~/data')
+        # run('./export_data_gnuplot.sh '+timespan+' ~/data')
+        # run('./export_data_matplotlib.sh '+timespan+' ~/data')
     get('~/data', outputPath)
 
 def run_eval1(users='10',reqs='20'):
@@ -374,6 +375,7 @@ def run_eval2(users='10',reqs='20'):
     minutesSpent = int(math.ceil(timeSpent.seconds/60.0))
     print("From "+str(startTime)+' to '+str(endTime)+', thats '+str(minutesSpent)+' minutes.')
     # collect data
+    from ipdb import set_trace;set_trace() 
     result = collect_data_eval2(minutesSpent) # same as 3
 
     print(result)
@@ -616,6 +618,7 @@ AVG_NET_OUT = """
 
 def collect_data_eval2(minutesSpent):
     # COST
+    from ipdb import set_trace;set_trace() 
     avg_scale = {}
     max_scale = {}
     for service in ['business_web_1', 'business_web_2', 'business_web_3']:
