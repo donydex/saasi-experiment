@@ -1,3 +1,4 @@
+#coding=utf-8
 from fabric.api import env, run, roles, cd, reboot, settings, parallel, execute, local, get
 import requests
 import time
@@ -7,6 +8,8 @@ import math
 import json
 import socket
 import os
+import time
+import threading
 
 # Change this
 # from 
@@ -457,7 +460,7 @@ def fun_timer():
     timeGap = (int)(timeGap/extime)-1
     print('timeGap:{}'.format(timeGap))
 #     t = dailyPattern(time)
-	userInt = 10
+    userInt = 10
     reqs = xlist[timeGap]
     print("The request number {num}".format(num=reqs))
     if(reqs == 0):
