@@ -388,6 +388,7 @@ def run_eval2(users='10',reqs='20'):
     execute(clean_stack)
     execute(restart_cluster)
 
+
 def run_eval3(users='10',reqs='20'):
     requestsInt = int(reqs)
     usersInt = int(users)
@@ -442,6 +443,97 @@ def run_eval3(users='10',reqs='20'):
         outfile.write(json.dumps(result, outfile, sort_keys=True, indent=4))
 
     execute(export_data_eval3, str(minutesSpent)+'m', outputPath)
+    execute(clean_stack)
+    execute(restart_cluster)
+
+xlist = [306, 476, 391,45,0,0]
+#实验一次时常 单位:s
+extime = 180
+#实验组数
+exnums = 4
+def fun_timer():
+    global timer
+    timeGap = int(time.time())-timeBegin
+    timeGap = (int)(timeGap/extime)-1
+    print('timeGap:{}'.format(timeGap))
+#     t = dailyPattern(time)
+	userInt = 10
+    reqs = xlist[timeGap]
+    print("The request number {num}".format(num=reqs))
+    if(reqs == 0):
+        return 0
+
+    execute(start_load_eval2, userCount=usersInt, requestsToRun=reqs)
+    timer = threading.Timer(extime, fun_timer)
+    timer.start()
+
+# timer = threading.Timer(5, fun_timer)
+# timeBegin = int(time.time())
+# timer.start()
+# time.sleep(extime*(exnums+1)) # 15秒后停止定时器
+# timer.cancel()
+
+def run_eval4(users='10',reqs='20'):
+    #from 
+    requestsInt = int(reqs)
+    usersInt = int(users)
+    print("="*20)
+    print('Evaluation 4, '+str(usersInt)+' users run for '+str(requestsInt)+ ' requests')
+    print("="*20)
+    outputPath = Template(OUTPUT_PATH).substitute({'users': users, 'requests': reqs, 'ts':datetime.now().strftime('%d%H%M%S'), 'type': 'eval2'})
+    local("mkdir "+outputPath)
+
+    execute(clean_load)
+    retry = True
+    while (retry):
+        try:
+            execute(clean_stack)
+            execute(deploy_stack_eval2)
+            retry = False
+        except SystemExit:
+            print('Retrying')
+            retry = True
+
+    ensure_elasticsearch_healthy()
+    ensure_business_web_healthy_eval2()
+
+    startTime = datetime.now()
+
+    timer = threading.Timer(5, fun_timer)
+    timeBegin = int(time.time())
+    timer.start()
+    time.sleep(extime*(exnums+1)) # 
+    timer.cancel()
+    # execute(start_load_eval2, userCount=usersInt, requestsToRun=requestsInt)
+    execute(clean_load)
+    # wait for the cluster to chill off
+    while True:
+        try:
+            s = prom.GetInstantValue("scalar(sum(bms_active_transactions))")[1]
+            print(s)
+            p = int(s)
+        except:
+            p = 0
+        if p<5:
+            break
+        print("Still",p,"requests running... Waiting for them to finish")
+        time.sleep(10)
+
+    endTime = datetime.now()
+    timeSpent = endTime - startTime
+    minutesSpent = int(math.ceil(timeSpent.seconds/60.0))
+    print("From "+str(startTime)+' to '+str(endTime)+', thats '+str(minutesSpent)+' minutes.')
+    # collect data
+    from ipdb import set_trace;set_trace() 
+    result = collect_data_eval2(minutesSpent) # same as 3
+
+    print(result)
+    mkdir(outputPath)
+    with open(outputPath+'/data.json', 'w') as outfile:
+        outfile.write(json.dumps(result, outfile, sort_keys=True, indent=4))
+
+    execute(export_data_eval2, str(minutesSpent)+'m', outputPath)
+    
     execute(clean_stack)
     execute(restart_cluster)
 
