@@ -378,7 +378,7 @@ def run_eval2(users='10',reqs='20'):
     minutesSpent = int(math.ceil(timeSpent.seconds/60.0))
     print("From "+str(startTime)+' to '+str(endTime)+', thats '+str(minutesSpent)+' minutes.')
     # collect data
-    from ipdb import set_trace;set_trace() 
+    # from ipdb import set_trace;set_trace() 
     result = collect_data_eval2(minutesSpent) # same as 3
 
     print(result)
@@ -449,26 +449,7 @@ def run_eval3(users='10',reqs='20'):
     execute(clean_stack)
     execute(restart_cluster)
 
-xlist = [306, 476, 391,45,0,0]
-#实验一次时常 单位:s
-extime = 180
-#实验组数
-exnums = 4
-def fun_timer():
-    global timer
-    timeGap = int(time.time())-timeBegin
-    timeGap = (int)(timeGap/extime)-1
-    print('timeGap:{}'.format(timeGap))
-#     t = dailyPattern(time)
-    userInt = 10
-    reqs = xlist[timeGap]
-    print("The request number {num}".format(num=reqs))
-    if(reqs == 0):
-        return 0
 
-    execute(start_load_eval2, userCount=usersInt, requestsToRun=reqs)
-    timer = threading.Timer(extime, fun_timer)
-    timer.start()
 
 # timer = threading.Timer(5, fun_timer)
 # timeBegin = int(time.time())
@@ -478,12 +459,17 @@ def fun_timer():
 
 def run_eval4(users='10',reqs='20'):
     #from 
+    xlist = [306, 476, 391,45]
+	#实验一次时常 单位:s
+    extime = 180
+	#实验组数
+    exnums = 4
     requestsInt = int(reqs)
     usersInt = int(users)
     print("="*20)
     print('Evaluation 4, '+str(usersInt)+' users run for '+str(requestsInt)+ ' requests')
     print("="*20)
-    outputPath = Template(OUTPUT_PATH).substitute({'users': users, 'requests': reqs, 'ts':datetime.now().strftime('%d%H%M%S'), 'type': 'eval2'})
+    outputPath = Template(OUTPUT_PATH).substitute({'users': users, 'requests': reqs, 'ts':datetime.now().strftime('%d%H%M%S'), 'type': 'eval4'})
     local("mkdir "+outputPath)
 
     execute(clean_load)
@@ -502,38 +488,44 @@ def run_eval4(users='10',reqs='20'):
 
     startTime = datetime.now()
 
-    timer = threading.Timer(5, fun_timer)
-    timeBegin = int(time.time())
-    timer.start()
-    time.sleep(extime*(exnums+1)) # 
-    timer.cancel()
-    # execute(start_load_eval2, userCount=usersInt, requestsToRun=requestsInt)
-    execute(clean_load)
+    for i,reqs in enumerate(xlist):
+        print("Reqs {}:".format(reqs))
+        reqs = requestsInt
+        stime = datetime.now()
+        execute(start_load_eval2, userCount=usersInt, requestsToRun=requestsInt)
+        execute(clean_load)
     # wait for the cluster to chill off
-    while True:
-        try:
-            s = prom.GetInstantValue("scalar(sum(bms_active_transactions))")[1]
-            print(s)
-            p = int(s)
-        except:
-            p = 0
-        if p<5:
-            break
+        while True:
+            try:
+                s = prom.GetInstantValue("scalar(sum(bms_active_transactions))")[1]
+                print(s)
+                p = int(s)
+            except:
+                p = 0
+            if p<5:
+                break
         print("Still",p,"requests running... Waiting for them to finish")
         time.sleep(10)
+        etime = datetime.now()
+        tSpent = int(math.ceil((etime - stime).seconds/60.0))
+        print("Time spend {}m for reqs:{} in times:{} ".format(tSpent,reqs,i))
+        # time.sleep(extime)
+
 
     endTime = datetime.now()
     timeSpent = endTime - startTime
     minutesSpent = int(math.ceil(timeSpent.seconds/60.0))
     print("From "+str(startTime)+' to '+str(endTime)+', thats '+str(minutesSpent)+' minutes.')
     # collect data
-    from ipdb import set_trace;set_trace() 
+    # from ipdb import set_trace;set_trace() 
     result = collect_data_eval2(minutesSpent) # same as 3
 
     print(result)
     mkdir(outputPath)
+    print('outputPath:{}'.format(outputPath))
     with open(outputPath+'/data.json', 'w') as outfile:
-        outfile.write(json.dumps(result, outfile, sort_keys=True, indent=4))
+        # outfile.write(json.dumps(result, outfile, sort_keys=True, indent=4))
+        json.dumps(result, outfile, sort_keys=True, indent=4)
 
     execute(export_data_eval2, str(minutesSpent)+'m', outputPath)
     
@@ -713,7 +705,7 @@ AVG_NET_OUT = """
 
 def collect_data_eval2(minutesSpent):
     # COST
-    from ipdb import set_trace;set_trace() 
+    # from ipdb import set_trace;set_trace() 
     avg_scale = {}
     max_scale = {}
     for service in ['business_web_1', 'business_web_2', 'business_web_3']:
